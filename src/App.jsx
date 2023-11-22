@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Home from "./Pages/Home";
 import './app.scss'
 import Properties from "./Component/Properties/Properties";
@@ -9,6 +9,10 @@ import { getProperties } from "./utils/fetchApi";
 import { useEffect, useState } from "react";
 import DetailedPage from "./Pages/DetailedPage";
 import Loader from "./Component/Loader/Loader";
+import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
+import AddProperty from "./Pages/AddProperty";
+import useAuth from "./custom-hook/useAuth";
 function App() {
 
   const [propertiesForSale, setPropertiesForSale] = useState([])
@@ -16,15 +20,16 @@ function App() {
   const [purpose, setpurpose] = useState(null)
   // loading 
   const [loading, setLoading] = useState(true)
-
-
+  
+  
+  
   useEffect(() => {
 
     // get properties for sale 
     getProperties('properties/list?locationExternalIDs=5002&purpose=for-sale&hitsPerPage=6').then((data)=>{
       setPropertiesForSale(data.hits)
       console.log(data.hits)
-
+      
     })    
     // get properties for rent 
     getProperties('properties/list?locationExternalIDs=5002&purpose=for-rent&hitsPerPage=6').then((data)=>{
@@ -32,8 +37,9 @@ function App() {
       setLoading(false)
     })    
   }, [])
-
+  
   const Layout = () => {
+    
     return (
       <div className="app">
         {loading ? <Loader /> : (
@@ -57,15 +63,27 @@ function App() {
           path: "/",
           element: <Home propertiesForSale={propertiesForSale} propertiesForRent={propertiesForRent} />
         },
-        // {
-        //   path: "/properties/:id",
-        //   element: <DetailedPage />
-        // },
+        {
+          path: "/properties/:id",
+          element: <DetailedPage />
+        },
         {
           path: "/search",
           element: <Search purpose={purpose} setpurpose={setpurpose} />
+        },
+        {
+          path: "/add-property",
+          element: <AddProperty />
         }
       ]
+    },
+    {
+      path: "/login",
+      element: <Login />
+    },
+    {
+      path: "/signup",
+      element: <Signup />
     }
   ]);
   return (

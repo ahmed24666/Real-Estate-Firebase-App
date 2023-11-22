@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 const Properties = ({property}) => {
   return (
 
-    // <Link to={`/properties/${property.externalID}`}>
+    <Link to={`/properties/${property.externalID}`}>
         <div className='cardP d-flex flex-wrap p-2 p-md-5 pt-0 justify-content-center' style={{cursor:'pointer'}}>
             <div className="image" >
                 <img src={property.coverPhoto?property.coverPhoto.url:'/images/house.webp'} style={{objectFit:'cover'}} alt="" />
@@ -31,7 +31,7 @@ const Properties = ({property}) => {
                 </div>
             </div>
         </div>
-    // </Link>
+     </Link>
   )
 }
 
