@@ -5,16 +5,40 @@ import { FcAbout } from "react-icons/fc";
 import { BsSearch } from "react-icons/bs";
 import { FiKey } from "react-icons/fi";
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SlLogin, SlLogout } from "react-icons/sl";
 import { MdOutlineAddHome } from "react-icons/md";
 import useAuth from '../../custom-hook/useAuth';
+import { signOut } from 'firebase/auth';
+import Swal from 'sweetalert2';
+import { auth } from '../../firebase.config';
 const Nav = ({ purpose, setpurpose }) => {
     const [show, setShow] = useState(false);
-
+    const navigate = useNavigate()
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const { currentUser } = useAuth()
+
+    const logOut = () => {
+        signOut(auth).then(() => {
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Logged Out !!',
+                showConfirmButton: false,
+                timer: 1500,
+              })
+              navigate('/')
+            }).catch(err => {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error !!',
+                showConfirmButton: false,
+                timer: 1500,
+              })
+        })
+    }
     // useEffect(() => {
     //     if (location.pathname=='/add-property' && !currentUser) {
     //       navigate('/login')
@@ -45,24 +69,37 @@ const Nav = ({ purpose, setpurpose }) => {
                             <h1 className="logo fs-3" style={{ color: '#607D8B' }}>Search</h1>
                         </Link>
                     </div>
+                    {!currentUser && (
+                        <>
+                            <div className="link mb-5">
+                                <Link to='/login' className='d-flex align-items-center justify-content-center gap-3 fs-4' onClick={handleClose}>
+                                    <SlLogin />
+                                    <h1 className="logo fs-3" style={{ color: '#607D8B' }}>Login</h1>
+                                </Link>
+                            </div>
+                            <div className="link mb-5">
+                                <Link to='/signup' className='d-flex align-items-center justify-content-center gap-3 fs-4' onClick={handleClose}>
+                                    <SlLogin />
+                                    <h1 className="logo fs-3" style={{ color: '#607D8B' }}>Signup</h1>
+                                </Link>
+                            </div>
+                        </>
+                    )}
                     <div className="link mb-5">
-                        <Link to='/login' className='d-flex align-items-center justify-content-center gap-3 fs-4' onClick={handleClose}>
-                        <SlLogin />
-                            <h1 className="logo fs-3" style={{ color: '#607D8B' }}>Login</h1>
-                        </Link>
-                    </div>
-                    <div className="link mb-5">
-                        <Link to='/signup' className='d-flex align-items-center justify-content-center gap-3 fs-4' onClick={handleClose}>
-                        <SlLogin />
-                            <h1 className="logo fs-3" style={{ color: '#607D8B' }}>Signup</h1>
-                        </Link>
-                    </div>
-                    <div className="link mb-5">
-                        <Link to={currentUser?'/add-property':'/login'} className='d-flex align-items-center justify-content-center gap-3 fs-4' onClick={handleClose}>
-                        <MdOutlineAddHome />
+                        <Link to={currentUser ? '/add-property' : '/login'} className='d-flex align-items-center justify-content-center gap-3 fs-4' onClick={handleClose}>
+                            <MdOutlineAddHome />
                             <h1 className="logo fs-3" style={{ color: '#607D8B' }}>Add Property</h1>
                         </Link>
                     </div>
+                    {currentUser && (
+                        <div className="link mb-5">
+                            <div className='d-flex align-items-center justify-content-center gap-3 fs-4' onClick={(e)=>{logOut();handleClose();}}>
+                                <SlLogout />
+                                <h1 className="logo fs-3" style={{ color: '#607D8B' }}>Logout</h1>
+                            </div>
+                        </div>
+
+                    )}
                     {/* <div className="link mb-5" onClick={() => setpurpose('&purpose=for-sale')}>
                     <Link to='/search' className='d-flex align-items-center justify-content-center gap-3 fs-3' style={{cursor:'pointer'}} onClick={handleClose} >
                             <FiKey />

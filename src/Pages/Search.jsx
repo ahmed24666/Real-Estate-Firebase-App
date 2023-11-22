@@ -8,6 +8,7 @@ import Properties from '../Component/Properties/Properties';
 import { useLocation } from 'react-router-dom';
 import { getProperties } from '../utils/fetchApi'
 import Spinner from 'react-bootstrap/Spinner';
+import useGetData from '../custom-hook/useGetData';
 const Search = ({ purpose, setpurpose }) => {
     const [show, setShow] = useState(false);
     const location = useLocation()
@@ -24,16 +25,20 @@ const Search = ({ purpose, setpurpose }) => {
     const [areaMax, setareaMax] = useState(null)
     const [roomsMin, setroomsMin] = useState(null)
     const [bathsMin, setbathsMin] = useState(null)
-    useEffect(() => {
-        setloading(true)
-        // get properties for rent 
-        getProperties(`properties/list?locationExternalIDs=5002${purpose !== null ? purpose : ''}&hitsPerPage=25&page=${page}${sort !== null ? sort : ''}${rentFrequency !== null ? rentFrequency : ''}${category !== null ? category : ''}${priceMin !== null ? priceMin : ''}${priceMax !== null ? priceMax : ''}${areaMin !== null ? areaMin : ''}${areaMax !== null ? areaMax : ''}${roomsMin !== null ? roomsMin : ''}${bathsMin !== null ? bathsMin : ''}`).then((data) => {
-            setProperties(data.hits)
-            console.log(data)
-            setloading(false)
-        })
 
-    }, [purpose, page, sort, rentFrequency, category, priceMin, priceMax, areaMin, areaMax, roomsMin, bathsMin])
+    const { data: productsData } = useGetData('products')
+    const { dataLoading } = useGetData('products')
+
+    // useEffect(() => {
+    //     setloading(true)
+    //     // get properties for rent 
+    //     getProperties(`properties/list?locationExternalIDs=5002${purpose !== null ? purpose : ''}&hitsPerPage=25&page=${page}${sort !== null ? sort : ''}${rentFrequency !== null ? rentFrequency : ''}${category !== null ? category : ''}${priceMin !== null ? priceMin : ''}${priceMax !== null ? priceMax : ''}${areaMin !== null ? areaMin : ''}${areaMax !== null ? areaMax : ''}${roomsMin !== null ? roomsMin : ''}${bathsMin !== null ? bathsMin : ''}`).then((data) => {
+    //         setProperties(data.hits)
+    //         console.log(data)
+    //         setloading(false)
+    //     })
+
+    // }, [purpose, page, sort, rentFrequency, category, priceMin, priceMax, areaMin, areaMax, roomsMin, bathsMin])
     return (
         <div className=''>
             <div onClick={() => setShow(!show)} className='d-flex container text-center justify-content-center align-items-center gap-3 p-3 fs-5 border-bottom' style={{ cursor: 'pointer' }}>
@@ -239,14 +244,14 @@ const Search = ({ purpose, setpurpose }) => {
             <div className='py-5'>
                 <div className="fs-3 py-3 fw-bold text-center text-md-start container">Filtered Properties</div>
                 {
-                    loading ? (<div className='d-flex justify-content-center pt-5'><Spinner animation="grow" /></div>) : (
+                    dataLoading ? (<div className='d-flex justify-content-center pt-5'><Spinner animation="grow" /></div>) : (
                         <>
                             <div className="d-flex flex-wrap justify-content-evenly">
-                                {properties.length === 0 ? (<div>No Properties To Display</div>) : properties.map((property) => (
+                                {productsData.length === 0 ? (<div>No Properties To Display</div>) : productsData.map((property) => (
                                     <Properties property={property} key={property.id} />
                                 ))}
                             </div>
-                            <div className="pagenation d-flex align-items-center justify-content-evenly py-5">
+                            {/* <div className="pagenation d-flex align-items-center justify-content-evenly py-5">
                                 {
                                     page !== 0 && (
                                         <div className="prev d-flex" style={{ cursor: 'pointer' }} onClick={() => { page === 0 ? setpage(0) : setpage(page - 1) }}>
@@ -267,7 +272,7 @@ const Search = ({ purpose, setpurpose }) => {
                                         <FcNext />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </>
                     )
                 }
