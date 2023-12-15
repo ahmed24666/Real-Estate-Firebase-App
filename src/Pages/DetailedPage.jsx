@@ -63,6 +63,7 @@ const DetailedPage = () => {
                     {property?.title}
                 </div>
                 <div className="d-flex p-2 pt-4 align-items-center justify-content-center text-center text-muted fs-6">
+                    
                     {property?.desc}
                 </div>
                 <div className="d-flex  p-2 pt-4 align-items-center justify-content-evenly text-center text-muted fs-4 flex-column flex-md-row">

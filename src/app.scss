@@ -183,7 +183,14 @@ img {
   border-radius: 10px;
   box-shadow: 0px 48px 35px -48px rgba(0, 0, 0, 0.1);
 }
-
+.multi-range-slider {
+  box-shadow: none !important;
+  border: none !important;
+  * {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
 .custum-file-upload .icon {
   display: flex;
   align-items: center;

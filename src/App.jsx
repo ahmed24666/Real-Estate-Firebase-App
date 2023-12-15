@@ -13,6 +13,7 @@ import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import AddProperty from "./Pages/AddProperty";
 import useAuth from "./custom-hook/useAuth";
+import useGetData from "./custom-hook/useGetData";
 function App() {
 
   const [propertiesForSale, setPropertiesForSale] = useState([])
@@ -23,20 +24,22 @@ function App() {
   
   
   
+  const { dataLoading } = useGetData('products')
   useEffect(() => {
 
-    // get properties for sale 
-    getProperties('properties/list?locationExternalIDs=5002&purpose=for-sale&hitsPerPage=6').then((data)=>{
-      setPropertiesForSale(data.hits)
-      console.log(data.hits)
+    // // get properties for sale 
+    // getProperties('properties/list?locationExternalIDs=5002&purpose=for-sale&hitsPerPage=6').then((data)=>{
+    //   setPropertiesForSale(data.hits)
+    //   console.log(data.hits)
       
-    })    
-    // get properties for rent 
-    getProperties('properties/list?locationExternalIDs=5002&purpose=for-rent&hitsPerPage=6').then((data)=>{
-      setPropertiesForRent(data.hits)
+    // })    
+    // // get properties for rent 
+    // getProperties('properties/list?locationExternalIDs=5002&purpose=for-rent&hitsPerPage=6').then((data)=>{
+    //   setPropertiesForRent(data.hits)
+    // })
+    
       setLoading(false)
-    })    
-  }, [])
+  }, [dataLoading])
   
   const Layout = () => {
     
